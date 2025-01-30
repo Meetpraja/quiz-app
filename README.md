@@ -41,15 +41,23 @@ https://github.com/user-attachments/assets/b7d948ca-df27-41fb-be93-785c08ebc061
 ```css
 📦 quiz-app
 ┣ 📂 lib
-┃ ┣ 📂 screens
-┃ ┃ ┣ 📜 home_screen.dart
-┃ ┃ ┣ 📜 quiz_screen.dart
+┃ ┣ 📂 api_services
+┃ ┃ ┣ 📜 api_services.dart
+┃ ┣ 📂 components
+┃ ┃ ┣ 📜 answer_button.dart
+┃ ┃ ┣ 📜 identifier.dart
+┃ ┃ ┣ 📜 start_button.dart
+┃ ┃ ┣ 📜 summary.dart
+┃ ┃ ┣ 📜 summary_item.dart
+┃ ┣ 📂 controller   
+┃ ┃ ┣ 📜 quiz_controller.dart
+┃ ┣ 📂 model
+┃ ┃ ┣ 📜 quiz_model.dart
+┃ ┣ 📂 views
+┃ ┃ ┣ 📜 questions.dart
 ┃ ┃ ┣ 📜 result_screen.dart
-┃ ┣ 📂 services
-┃ ┃ ┣ 📜 api_service.dart
-┃ ┣ 📂 widgets
-┃ ┃ ┣ 📜 question_card.dart
-┃ ┃ ┣ 📜 option_button.dart
+┃ ┃ ┣ 📜 splash_screen.dart
+┃ ┃ ┣ 📜 start_screen.dart
 ┃ ┣ 📜 main.dart
 ┣ 📜 pubspec.yaml
 ┣ 📜 README.md
