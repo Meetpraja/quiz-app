@@ -1,15 +1,13 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quiz_app/components/start_button.dart';
 import 'package:quiz_app/model/quiz_model.dart';
 import 'package:quiz_app/views/questions.dart';
 import 'package:quiz_app/views/result_screen.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class StartScreen extends StatefulWidget {
-  const StartScreen({
-    super.key,
-  required this.quiz
-  });
+  const StartScreen({super.key, required this.quiz});
 
   final QuizModel quiz;
 
@@ -18,101 +16,152 @@ class StartScreen extends StatefulWidget {
 }
 
 class _StartScreenState extends State<StartScreen> {
-
   bool isQuestion = false;
 
   List<Option> selectedAnswer = [];
   List<Option> correctAnswers = [];
-  List<Map<String,dynamic>> summaryData = [];
+  List<Map<String, dynamic>> summaryData = [];
 
-  void doSummary(){
-    try{
-      print('doing summary');
-      for(int i=0;i<widget.quiz.questions!.length;i++){
-        print(widget.quiz.questions?[i]);
-        print(selectedAnswer[i]);
-        print(correctAnswers[i]);
+  void doSummary() {
+    try {
+      for (int i = 0; i < widget.quiz.questions!.length; i++) {
         summaryData.add({
-          'index' : i,
-          'question' : widget.quiz.questions?[i].description,
-          'selected_ans' : selectedAnswer[i].description,
-          'correct_ans' : correctAnswers[i].description
+          'index': i,
+          'question': widget.quiz.questions?[i].description,
+          'selected_ans': selectedAnswer[i].description,
+          'correct_ans': correctAnswers[i].description
         });
       }
-      print(summaryData);
-    }catch (e){
-      print('Error : $e');
+    } catch (e) {
+      log('Error : $e');
     }
   }
 
   void chooseAnswer(Option answer) {
     selectedAnswer.add(answer);
-    print(selectedAnswer.length);
-    print(widget.quiz.questions?.length);
     if (selectedAnswer.length == widget.quiz.questions?.length) {
-      print('in the condition');
-     doSummary();
-      print(selectedAnswer);
+      doSummary();
       setState(() {
         selectedAnswer = [];
         isQuestion = false;
-        Get.to(()=>ResultScreen(summaryData: summaryData,))?.then((value){
+        title = 'available quizzes';
+        Get.to(() => ResultScreen(
+              summaryData: summaryData,
+            ))?.then((value) {
           summaryData = [];
         });
       });
     }
   }
-  void getCorrectAnswers(List<Option> options){
-    print(options);
-    for(var op in options){
-      if(op.isCorrect!){
+
+  void getCorrectAnswers(List<Option> options) {
+    for (var op in options) {
+      if (op.isCorrect!) {
         correctAnswers.add(op);
       }
     }
-    print(correctAnswers);
   }
 
-
-  void startQuiz(){
+  void onBack() {
     setState(() {
-      isQuestion = true;
+      isQuestion = false;
+      title = 'available quizzes';
     });
   }
 
+  void startQuiz() {
+    setState(() {
+      isQuestion = true;
+      title = 'Questions';
+    });
+  }
+
+  String title = 'available quizzes';
+
   @override
   Widget build(BuildContext context) {
-
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 243, 224, 1.0),
-      body:
-      isQuestion
-          ? QuestionsScreen(selectedAnswer: chooseAnswer, questions: widget.quiz.questions!,findCorrectAnswer: getCorrectAnswers,)
-          : Container(
-        height: size.height,
-        width: size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 10,
-          children: [
-            Text('Quiz of',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
-            Text(widget.quiz.title.toString(),style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
-            SizedBox(height: 50,),
-            Text(
-              'ready for the quiz ?',
-              style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold
-              ),
-            ),
-            SizedBox(height: 10,),
-            StartButton(title: 'start',onStart: startQuiz,),
-          ],
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(64, 125, 216, 1.0),
+        title: Text(
+          title,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
+      backgroundColor: Color.fromRGBO(255, 243, 224, 1.0),
+      body: isQuestion
+          ? QuestionsScreen(
+              selectedAnswer: chooseAnswer,
+              questions: widget.quiz.questions!,
+              findCorrectAnswer: getCorrectAnswers,
+              onBack: onBack,
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              height: size.height,
+              width: size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(111, 162, 241, 1.0),
+                        borderRadius: BorderRadius.circular(20)),
+                    height: 100,
+                    width: size.width,
+                    child: Row(
+                      spacing: 8,
+                      children: [
+                        Container(
+                          padding:
+                              EdgeInsets.only(left: 15, top: 20, bottom: 20),
+                          height: 100,
+                          child: Row(
+                            children: [
+                              Text('1.',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              SizedBox(
+                                width: (size.width - size.width / 3) - 10,
+                                child: AutoSizeText(
+                                  widget.quiz.title.toString(),
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        InkWell(
+                          onTap: startQuiz,
+                          child: Container(
+                              height: 100,
+                              width: 55,
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(90, 130, 241, 1.0),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(20),
+                                      bottomRight: Radius.circular(20))),
+                              child: Icon(
+                                Icons.navigate_next_rounded,
+                                size: 40,
+                              )),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }

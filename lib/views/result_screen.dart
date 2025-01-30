@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/components/start_button.dart';
 import 'package:quiz_app/components/summary.dart';
@@ -12,52 +13,67 @@ class ResultScreen extends StatelessWidget {
 
   final List<Map<String,dynamic>> summaryData;
 
-  int? score;
-  int? total;
-
-  getScore(){
-    score = summaryData
+  @override
+  Widget build(BuildContext context) {
+    int score = summaryData
         .where(
           (data) => data['selected_ans'] == data['correct_ans'],
     )
         .length;
-    total = summaryData.length;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    getScore();
-
-    print(summaryData[0]['question']);
+    int total = summaryData.length;
 
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(86, 204, 242, 1.0),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor:  Color.fromRGBO(64, 125, 216, 1.0),
+        title: Text('Result',style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.w700),),
+      ),
+      backgroundColor: Color.fromRGBO(248, 249, 253, 1),
       body: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.only(bottom: 40),
         height: size.height,
         width: size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Result',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 28),),
-            SizedBox(height: 10,),
-            Text(
-              'YOU scored $score OUT OF $total QUESTIONS',
-              style: TextStyle(
-                color:Color.fromRGBO(51, 51, 51, 1.0),
-                fontSize: 20,
-                fontWeight: FontWeight.w600
-              ),
-              textAlign: TextAlign.center,
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 20,top: 20 ),
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    shape:BoxShape.circle,
+                    color: Color.fromRGBO(15, 70, 154, 1.0),
+                    border: Border.all(width: 7,color: Color.fromRGBO(64, 125, 216, 1.0),),
+                  ),
+                  child: Column(
+                    children: [
+                      Text('SCORE',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
+                      Text('$score / $total',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: AutoSizeText(
+                    'YOU scored $score OUT OF $total QUESTIONS',
+                    style: TextStyle(
+                        color:Color.fromRGBO(51, 51, 51, 1.0),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             Summary(summaryData: summaryData,),
-            const SizedBox(height: 30),
-            StartButton(title: 'Restart quiz', onStart: (){
+            Spacer(),
+            StartButton(title: 'Back to Home', onStart: (){
               Get.back();
             })
           ],

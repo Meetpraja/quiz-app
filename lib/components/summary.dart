@@ -9,12 +9,11 @@ class Summary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 520,
+      height: 500,
       child: SingleChildScrollView(
         child: Column(
           children: summaryData.map(
                 (data) {
-                  print('printing data from summary : ${data['index']}');
               return SummaryItem(data);
             },
           ).toList(),

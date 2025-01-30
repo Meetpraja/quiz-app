@@ -1,8 +1,13 @@
+import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:quiz_app/model/quiz_model.dart';
 
 class ApiServices{
+
+  String apiUrl = dotenv.env['API_URL'] ?? '';
 
   final Dio dio = Dio(
     BaseOptions(
@@ -22,7 +27,7 @@ class ApiServices{
   Future<QuizModel?> getQuiz() async {
     try {
       final userValue = await dio.get(
-          "https://api.jsonserve.com/Uw5CrX",
+         apiUrl!,
       );
 
       if (userValue.statusCode == 200) {
@@ -33,13 +38,13 @@ class ApiServices{
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
-        print("Connection Timeout Exception");
+        log('Connection Timeout Exception');
       } else {
-        print("Dio Error: $e");
+        log('Dio Error: $e');
       }
       return null;
     } catch (e) {
-      print("General Error: $e");
+      log('General Error: $e');
       return null;
     }
   }

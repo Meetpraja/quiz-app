@@ -35,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -45,8 +46,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(111, 162, 241, 1.0),
       body: Center(
-        child: Image.asset('assets/splash_icon.png'),
+        child: Image.asset('assets/splash_icon.png',color: Color.fromRGBO(
+            34, 87, 173, 1.0)),
       ),
     );
   }

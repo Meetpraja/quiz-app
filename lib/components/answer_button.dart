@@ -25,11 +25,12 @@ class AnswerButton extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(width: 1,color: Colors.grey),
             borderRadius: BorderRadius.circular(8),
-            color: Color.fromRGBO(86, 204, 242, 1.0)
+            color: Color.fromRGBO(64, 125, 216, 1.0),
           ),
           child: Text(title,style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500
+            fontWeight: FontWeight.w500,
+            color: Colors.white
           ),),
         ),
       ),

@@ -9,22 +9,18 @@ class QuestionsScreen extends StatefulWidget {
     required this.selectedAnswer,
     required this.questions,
     required this.findCorrectAnswer,
+    required this.onBack,
   });
   final void Function(Option answer) selectedAnswer;
   final List<Question> questions;
   final void Function(List<Option> answer) findCorrectAnswer;
+  final void Function() onBack;
 
   @override
   State<QuestionsScreen> createState() => _QuestionsState();
 }
 
 class _QuestionsState extends State<QuestionsScreen> {
-
-  // List<Option> shuffeldAnswers(List<Option> answer) {
-  //   final shuffeldAnswerList = List.of(answer);
-  //   shuffeldAnswerList.shuffle();
-  //   return shuffeldAnswerList;
-  // }
 
   List<Option> options = [];
 
@@ -40,41 +36,89 @@ class _QuestionsState extends State<QuestionsScreen> {
     });
   }
 
+  void onPreviousQuestion(){
+    if(currentQuestionIndex > 0){
+      setState(() {
+        options = [];
+        currentQuestionIndex--;
+      });
+    }else{
+      setState(() {
+        options = [];
+      });
+      widget.onBack();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentQuestion = widget.questions[currentQuestionIndex];
     return Container(
       color: Color.fromRGBO(248, 249, 253, 1),
-      margin: EdgeInsets.all(10),
-      child: SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 30),
-              child: Text('${currentQuestionIndex+1}. ${currentQuestion.description}',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(242, 240, 239, 1.0),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(2, 2),
+                    blurRadius: 10,
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 4
+                  ),
+                ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                InkWell(
+                  onTap : onPreviousQuestion,
+                  child: Row(
+                    spacing : 5,
+                    children: [
+                      Icon(Icons.arrow_back_outlined,color: Color.fromRGBO(15, 70, 154, 1.0),),
+                      Text('previous',style: TextStyle(color: Color.fromRGBO(15, 70, 154, 1.0)),),
+                    ],
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+                SizedBox(height: 5,),
+                Text(
+                  'Question : ${currentQuestionIndex + 1} / ${widget.questions.length}',
+                  style: TextStyle(
+                      color: Colors.blue, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Text(
+                    '${currentQuestion.description}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                ...currentQuestion
+                    .shuffeldAnswers(currentQuestion.options!)
+                    .map((Option e) {
+                  options.add(e as Option);
+                  return AnswerButton(
+                      title: e.description.toString(),
+                      onTap: () {
+                        answeredQuestion(e);
+                      });
+                }),
+              ],
             ),
-            SizedBox(height: 30,),
-            Text('Options : ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-            SizedBox(height: 20,),
-            ...currentQuestion.shuffeldAnswers(currentQuestion.options!).map((Option e) {
-              options.add(e as Option);
-              return AnswerButton(title: e.description.toString(),
-                  onTap: (){
-                    answeredQuestion(e);
-                  });
-            }),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
