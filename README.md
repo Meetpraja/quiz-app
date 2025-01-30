@@ -31,6 +31,7 @@ A Flutter-based Quiz App that fetches questions from an API, presents multiple-c
 
 
 ##📂 Project Structure
+```css
 📦 quiz-app
 ┣ 📂 lib
 ┃ ┣ 📂 screens
@@ -45,6 +46,7 @@ A Flutter-based Quiz App that fetches questions from an API, presents multiple-c
 ┃ ┣ 📜 main.dart
 ┣ 📜 pubspec.yaml
 ┣ 📜 README.md
+```
 
 ##🛠️ Technologies Used
 - Flutter (Dart) for UI
